@@ -42,9 +42,34 @@ for i in test:
         matches.append(i)
         print(matches[0])
 
+class StockInfo:
+    def __init__(self, ticker, inf_type):
+        self.ticker = ticker.upper()
+        self.inf_type = inf_type
 
+    def get_info_type(self):
+        functions = (dir(finnhub_client))
+        matches = []
+        for i in functions:
+            if self.inf_type in i:
+                matches.append(i)
+        if len(matches) > 1:
+            print("please select from list: " + matches)
+        else:
+            try:
+                print(getattr(finnhub_client, matches[0])(self.ticker))
+            except TypeError:
+                range1 = input("Please enter from range (YYYY-MM-DD): ")
+                range2 = input("Please enter to range (YYYY-MM-DD): ")
 
-print(finnhub_client.company_news('AAPL', _from="2021-06-01", to="2022-06-10"))
+                res = getattr(finnhub_client, matches[0])(self.ticker, _from=range1, to=range2)
+                print(res)
 
 # Company Peers
 
+
+ticker = input("Enter the stock ticker: ")
+info_type = input("please enter info type: ")
+gme = StockInfo(ticker, info_type)
+
+gme.get_info_type()
